@@ -14,7 +14,7 @@ def test_package_exports_client_class():
 
 
 def test_installed_distribution_has_version():
-    assert version("joplin-cli") == "0.1.0"
+    assert version("joplin-cli") == "0.1.1"
 
 
 def test_cli_help_path_exits_successfully():
