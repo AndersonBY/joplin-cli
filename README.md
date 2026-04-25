@@ -283,6 +283,23 @@ $env:JOPLIN_CLI_LIVE="1"; uv run pytest tests/live/test_live_joplin.py -v
 The live test only reads notebooks. It does not create, edit, or delete Joplin
 data.
 
+## Release
+
+PyPI publishing is configured through GitHub Actions trusted publishing. Create
+and publish a GitHub Release from this repository; the `release.yml` workflow
+will run tests, linting, type checks, build the distributions, and publish them
+to PyPI without a stored PyPI token.
+
+Before creating a release, update `version` in `pyproject.toml` and verify the
+package locally:
+
+```bash
+uv run pytest -q
+uv run ruff check .
+uv run ty check
+uv build
+```
+
 ## Troubleshooting
 
 If `doctor` says the server is offline:

@@ -273,6 +273,21 @@ $env:JOPLIN_CLI_LIVE="1"; uv run pytest tests/live/test_live_joplin.py -v
 
 live test 只读取 notebooks，不会创建、修改或删除 Joplin 数据。
 
+## 发布
+
+PyPI 发布已经配置为 GitHub Actions trusted publishing。创建并发布 GitHub
+Release 后，`release.yml` workflow 会运行测试、lint、类型检查，构建发行文件，并在
+不保存 PyPI token 的情况下发布到 PyPI。
+
+创建 release 前，先更新 `pyproject.toml` 里的 `version`，并在本地验证：
+
+```bash
+uv run pytest -q
+uv run ruff check .
+uv run ty check
+uv build
+```
+
 ## 故障排查
 
 如果 `doctor` 显示 server offline：
