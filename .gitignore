@@ -1,0 +1,14 @@
+.codex/
+ref/
+docs/superpowers/
+uv.lock
+
+.venv/
+.pytest_cache/
+.ruff_cache/
+__pycache__/
+*.py[cod]
+
+dist/
+build/
+*.egg-info/
