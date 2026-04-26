@@ -8,12 +8,17 @@ from joplin_cli.cli.commands import close_client, echo_output, get_client, optio
 from joplin_cli.cli.params import parse_kv_args
 
 app = typer.Typer(help="Work with notes.")
+PARAMS_HELP = "Parameters as key=value pairs."
+TEXT_PARAMS_HELP = (
+    "Parameters as key=value pairs. Text values support body=@./draft.md, "
+    "content=@./section.md, and @@literal for a leading @."
+)
 
 
 @app.command("list")
 def list_notes(
     ctx: typer.Context,
-    params: Annotated[list[str] | None, typer.Argument(help="Parameters as key=value pairs.")] = None,
+    params: Annotated[list[str] | None, typer.Argument(help=PARAMS_HELP)] = None,
     json_output: Annotated[bool, typer.Option("--json", help="Render JSON output.")] = False,
     output_format: Annotated[str, typer.Option("--format", help="Output format.")] = "text",
 ) -> None:
@@ -32,7 +37,7 @@ def list_notes(
 @app.command("read")
 def read_note(
     ctx: typer.Context,
-    params: Annotated[list[str] | None, typer.Argument(help="Parameters as key=value pairs.")] = None,
+    params: Annotated[list[str] | None, typer.Argument(help=PARAMS_HELP)] = None,
     json_output: Annotated[bool, typer.Option("--json", help="Render JSON output.")] = False,
     output_format: Annotated[str, typer.Option("--format", help="Output format.")] = "text",
 ) -> None:
@@ -49,7 +54,7 @@ def read_note(
 @app.command("create")
 def create_note(
     ctx: typer.Context,
-    params: Annotated[list[str] | None, typer.Argument(help="Parameters as key=value pairs.")] = None,
+    params: Annotated[list[str] | None, typer.Argument(help=TEXT_PARAMS_HELP)] = None,
     json_output: Annotated[bool, typer.Option("--json", help="Render JSON output.")] = False,
     output_format: Annotated[str, typer.Option("--format", help="Output format.")] = "text",
 ) -> None:
@@ -70,7 +75,7 @@ def create_note(
 @app.command("append")
 def append_note(
     ctx: typer.Context,
-    params: Annotated[list[str] | None, typer.Argument(help="Parameters as key=value pairs.")] = None,
+    params: Annotated[list[str] | None, typer.Argument(help=TEXT_PARAMS_HELP)] = None,
     json_output: Annotated[bool, typer.Option("--json", help="Render JSON output.")] = False,
     output_format: Annotated[str, typer.Option("--format", help="Output format.")] = "text",
 ) -> None:
@@ -88,7 +93,7 @@ def append_note(
 @app.command("prepend")
 def prepend_note(
     ctx: typer.Context,
-    params: Annotated[list[str] | None, typer.Argument(help="Parameters as key=value pairs.")] = None,
+    params: Annotated[list[str] | None, typer.Argument(help=TEXT_PARAMS_HELP)] = None,
     json_output: Annotated[bool, typer.Option("--json", help="Render JSON output.")] = False,
     output_format: Annotated[str, typer.Option("--format", help="Output format.")] = "text",
 ) -> None:
@@ -106,7 +111,7 @@ def prepend_note(
 @app.command("update")
 def update_note(
     ctx: typer.Context,
-    params: Annotated[list[str] | None, typer.Argument(help="Parameters as key=value pairs.")] = None,
+    params: Annotated[list[str] | None, typer.Argument(help=TEXT_PARAMS_HELP)] = None,
     json_output: Annotated[bool, typer.Option("--json", help="Render JSON output.")] = False,
     output_format: Annotated[str, typer.Option("--format", help="Output format.")] = "text",
 ) -> None:
@@ -128,7 +133,7 @@ def update_note(
 @app.command("move")
 def move_note(
     ctx: typer.Context,
-    params: Annotated[list[str] | None, typer.Argument(help="Parameters as key=value pairs.")] = None,
+    params: Annotated[list[str] | None, typer.Argument(help=PARAMS_HELP)] = None,
     json_output: Annotated[bool, typer.Option("--json", help="Render JSON output.")] = False,
     output_format: Annotated[str, typer.Option("--format", help="Output format.")] = "text",
 ) -> None:
@@ -146,7 +151,7 @@ def move_note(
 @app.command("copy")
 def copy_note(
     ctx: typer.Context,
-    params: Annotated[list[str] | None, typer.Argument(help="Parameters as key=value pairs.")] = None,
+    params: Annotated[list[str] | None, typer.Argument(help=PARAMS_HELP)] = None,
     json_output: Annotated[bool, typer.Option("--json", help="Render JSON output.")] = False,
     output_format: Annotated[str, typer.Option("--format", help="Output format.")] = "text",
 ) -> None:
@@ -164,7 +169,7 @@ def copy_note(
 @app.command("delete")
 def delete_note(
     ctx: typer.Context,
-    params: Annotated[list[str] | None, typer.Argument(help="Parameters as key=value pairs.")] = None,
+    params: Annotated[list[str] | None, typer.Argument(help=PARAMS_HELP)] = None,
     json_output: Annotated[bool, typer.Option("--json", help="Render JSON output.")] = False,
     output_format: Annotated[str, typer.Option("--format", help="Output format.")] = "text",
 ) -> None:

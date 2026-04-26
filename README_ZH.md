@@ -65,14 +65,21 @@ joplin-cli search query="meeting notes" --json
 
 ```bash
 joplin-cli notes read id=<note-id> --json
+joplin-cli notes create title="Draft" body=@./draft.md
 joplin-cli notes append id=<note-id> content="- [ ] Follow up"
 joplin-cli batch delete query="tag:temporary" dry-run
 ```
+
+长 Markdown 内容建议先写入 UTF-8 文件，再通过文本参数传给 CLI。
+`body=@./draft.md` 会从磁盘读取 note body，`content=@./section.md`
+会读取 append/prepend 的内容。如果确实要传入以 `@` 开头的字面量，
+使用 `body=@@literal`。
 
 对 Agent 友好的约定：
 
 - 优先使用 `key=value` 参数，便于生成 shell 命令。
 - 需要解析结果时使用 `--json`。
+- 大段 `body` 或 `content` 使用 `@file`，不要把整段 Markdown 直接塞进 shell 命令。
 - 使用 `joplin-cli help` 或 `joplin-cli <group> --help` 自发现命令。
 - 错误信息会说明原因和下一条可尝试命令。
 - validation 错误退出码为 `2`；连接、认证、未找到、冲突错误有独立退出码。
@@ -118,8 +125,11 @@ Notes：
 joplin-cli notes list limit=20
 joplin-cli notes read id=<note-id>
 joplin-cli notes create title="Draft" body="# Draft"
+joplin-cli notes create title="Draft" body=@./draft.md
 joplin-cli notes update id=<note-id> title="New title"
+joplin-cli notes update id=<note-id> body=@./draft.md
 joplin-cli notes append id=<note-id> content="- [ ] Follow up"
+joplin-cli notes append id=<note-id> content=@./section.md
 joplin-cli notes delete id=<note-id>
 ```
 

@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from pathlib import Path
 
 import pytest
 
@@ -29,6 +30,36 @@ def test_parse_kv_args_normalizes_dashes_and_rejects_empty_keys():
 
     with pytest.raises(JoplinValidationError):
         parse_kv_args(["=value"])
+
+
+def test_parse_kv_args_reads_text_file_references_for_body(tmp_path: Path):
+    note_file = tmp_path / "draft.md"
+    note_file.write_text("# Draft\n\nBody from disk.\n", encoding="utf-8")
+
+    parsed = parse_kv_args(["title=Draft", f"body=@{note_file}", "id=@literal-id"])
+
+    assert parsed.values == {
+        "title": "Draft",
+        "body": "# Draft\n\nBody from disk.\n",
+        "id": "@literal-id",
+    }
+
+
+def test_parse_kv_args_supports_literal_at_for_text_values():
+    parsed = parse_kv_args(["body=@@literal body"])
+
+    assert parsed.values == {"body": "@literal body"}
+
+
+def test_parse_kv_args_reports_missing_text_file_references(tmp_path: Path):
+    missing = tmp_path / "missing.md"
+
+    with pytest.raises(JoplinValidationError) as exc_info:
+        parse_kv_args([f"body=@{missing}"])
+
+    assert "Cannot read body from file." in exc_info.value.message
+    assert str(missing) in exc_info.value.cause
+    assert "body=@./draft.md" in exc_info.value.try_this
 
 
 def test_render_output_json_includes_dataclasses():

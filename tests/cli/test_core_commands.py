@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from pathlib import Path
 
 from typer.testing import CliRunner
 
@@ -73,6 +74,51 @@ def test_notes_create_forwards_kwargs_and_outputs_created_note_json():
     assert client.created == [{"title": "Draft", "body": "Body", "parent_id": "f1"}]
     assert '"id": "created"' in result.output
     assert '"body": "Body"' in result.output
+
+
+def test_notes_create_reads_body_from_markdown_file(tmp_path: Path):
+    client = FakeClient()
+    note_file = tmp_path / "draft.md"
+    note_file.write_text("# Draft\n\nCreated from disk.\n", encoding="utf-8")
+
+    result = CliRunner().invoke(
+        app(client),
+        ["notes", "create", "title=Draft", f"body=@{note_file}", "--json"],
+    )
+
+    assert result.exit_code == 0
+    assert client.created == [
+        {"title": "Draft", "body": "# Draft\n\nCreated from disk.\n", "parent_id": None}
+    ]
+
+
+def test_notes_create_reports_missing_body_file_before_client_creation(tmp_path: Path):
+    calls = {"client_factory": 0}
+    missing = tmp_path / "missing.md"
+
+    def raising_client_factory(**kwargs):
+        calls["client_factory"] += 1
+        raise AssertionError("client_factory should not be called")
+
+    cli_app = build_app(client_factory=raising_client_factory)
+
+    result = CliRunner().invoke(
+        cli_app,
+        ["notes", "create", "title=Draft", f"body=@{missing}"],
+    )
+
+    assert result.exit_code == 2
+    assert "Error: Cannot read body from file." in result.output
+    assert "Try: Use body=@./draft.md" in result.output
+    assert calls["client_factory"] == 0
+
+
+def test_notes_create_help_mentions_file_backed_body_values():
+    result = CliRunner().invoke(app(), ["notes", "create", "--help"])
+
+    assert result.exit_code == 0
+    assert "body=@./draft.md" in result.output
+    assert "@@literal" in result.output
 
 
 def test_notebooks_list_uses_injected_client_factory_and_json():

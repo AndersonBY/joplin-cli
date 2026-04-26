@@ -70,14 +70,22 @@ Every command is single-shot. Use `--json` for machine-readable output.
 
 ```bash
 joplin-cli notes read id=<note-id> --json
+joplin-cli notes create title="Draft" body=@./draft.md
 joplin-cli notes append id=<note-id> content="- [ ] Follow up"
 joplin-cli batch delete query="tag:temporary" dry-run
 ```
+
+For long Markdown content, write it to a UTF-8 file and pass the file as a text
+parameter. `body=@./draft.md` reads the note body from disk, and
+`content=@./section.md` does the same for append/prepend content. Use
+`body=@@literal` when the literal value must start with `@`.
 
 Design rules that matter for agents:
 
 - Use `key=value` arguments for predictable shell generation.
 - Prefer `--json` when another tool will parse the result.
+- Use `@file` for long `body` or `content` values instead of putting large
+  Markdown blocks directly in the shell command.
 - Use `joplin-cli help` or `joplin-cli <group> --help` to discover commands.
 - Errors explain the likely cause and a concrete next command.
 - Validation errors exit with code `2`; connection, auth, not-found, and
@@ -125,8 +133,11 @@ Notes:
 joplin-cli notes list limit=20
 joplin-cli notes read id=<note-id>
 joplin-cli notes create title="Draft" body="# Draft"
+joplin-cli notes create title="Draft" body=@./draft.md
 joplin-cli notes update id=<note-id> title="New title"
+joplin-cli notes update id=<note-id> body=@./draft.md
 joplin-cli notes append id=<note-id> content="- [ ] Follow up"
+joplin-cli notes append id=<note-id> content=@./section.md
 joplin-cli notes delete id=<note-id>
 ```
 

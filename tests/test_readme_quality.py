@@ -44,6 +44,7 @@ def test_readmes_include_quick_start_and_agent_usage_commands():
         "joplin-cli notes list limit=10",
         'joplin-cli search query="meeting notes" --json',
         "joplin-cli notes read id=<note-id> --json",
+        'joplin-cli notes create title="Draft" body=@./draft.md',
         'joplin-cli notes append id=<note-id> content="- [ ] Follow up"',
         'joplin-cli batch delete query="tag:temporary" dry-run',
         'joplin-cli batch delete query="tag:temporary" confirm=delete-2-notes-<hash>',
