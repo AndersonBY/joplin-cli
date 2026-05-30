@@ -1,7 +1,6 @@
 from collections.abc import Callable
 from typing import Any
 
-import click
 import typer
 from typer.core import TyperGroup
 
@@ -21,7 +20,7 @@ from joplin_cli.sdk.errors import JoplinError
 
 
 class JoplinCliGroup(TyperGroup):
-    def invoke(self, ctx: click.Context) -> Any:
+    def invoke(self, ctx: Any) -> Any:
         try:
             return super().invoke(ctx)
         except JoplinError as exc:
