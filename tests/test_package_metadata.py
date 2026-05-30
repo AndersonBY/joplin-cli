@@ -14,7 +14,7 @@ def test_package_exports_client_class():
 
 
 def test_installed_distribution_has_version():
-    assert version("joplin-cli") == "0.1.3"
+    assert version("joplin-cli") == "0.1.4"
 
 
 def test_distribution_metadata_supports_pypi_discovery():
@@ -29,6 +29,14 @@ def test_distribution_metadata_supports_pypi_discovery():
     assert "agent-friendly" in keywords
     assert "Environment :: Console" in classifiers
     assert "Topic :: Utilities" in classifiers
+
+
+def test_distribution_metadata_declares_direct_runtime_dependencies():
+    package_metadata = metadata("joplin-cli")
+    requirements = package_metadata.get_all("Requires-Dist") or []
+
+    for dependency in ["click", "httpx", "platformdirs", "typer"]:
+        assert any(requirement.startswith(dependency) for requirement in requirements)
 
 
 def test_cli_help_path_exits_successfully():
